@@ -7,6 +7,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { HomePageRoutingModule } from './home-routing.module';
 import { PusherProvider } from 'src/providers/pusher/pusher';
+import { ChartComponent } from '../chart/chart.component';
 
 
 @NgModule({
@@ -18,7 +19,8 @@ import { PusherProvider } from 'src/providers/pusher/pusher';
     HomePageRoutingModule
   ],
   declarations: [
-    HomePage
+    HomePage,
+    ChartComponent
   ],
   providers: [
     PusherProvider,

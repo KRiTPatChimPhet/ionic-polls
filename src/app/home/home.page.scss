@@ -1,4 +1,4 @@
-
+.content {
   .toolbar-background {
     background: #1cd8d2; /* fallback for old browsers */
     background: linear-gradient(to right, #93edc7, #1cd8d2);
@@ -55,3 +55,5 @@
     @extend .submit;
     margin-top: 5rem;
   }
+
+}
