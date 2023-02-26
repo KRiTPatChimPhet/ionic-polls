@@ -1,20 +1,27 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>
-      Blank
+      Vote
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+<ion-content>
+  <div padding>
+    <h1 class="header">Who will win the world cup?</h1>
+    <p class="sub-header">* Place vote to see results</p>
+  </div>
+  <div class="vote-area" *ngIf="!voted">
+    <div class="options">
+      <ion-button ion-button full class="option" color="light" [ngClass]="{active: selectedOption === option}"
+        *ngFor="let option of optionsArray" (click)="selectOption(option)">{{options[option].name}}</ion-button>
+    </div>
+    <div>
+      <button ion-button block class="submit" (click)="vote()">Submit Vote!</button>
+    </div>
+  </div>
+  <div class="result-area" *ngIf="voted">
+    <canvas baseChart></canvas>
+    <div ion-button block class="response">Thank you for voting!</div>
   </div>
 </ion-content>

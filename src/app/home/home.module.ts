@@ -3,8 +3,10 @@ import { CommonModule } from '@angular/common';
 import { IonicModule } from '@ionic/angular';
 import { FormsModule } from '@angular/forms';
 import { HomePage } from './home.page';
+import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { HomePageRoutingModule } from './home-routing.module';
+import { PusherProvider } from 'src/providers/pusher/pusher';
 
 
 @NgModule({
@@ -12,8 +14,15 @@ import { HomePageRoutingModule } from './home-routing.module';
     CommonModule,
     FormsModule,
     IonicModule,
+    HttpClientModule,
     HomePageRoutingModule
   ],
-  declarations: [HomePage]
+  declarations: [
+    HomePage
+  ],
+  providers: [
+    PusherProvider,
+    HttpClient
+  ]
 })
-export class HomePageModule {}
+export class HomePageModule { }
