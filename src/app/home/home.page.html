@@ -8,22 +8,33 @@
 
 <ion-content class="content">
 
-  <div padding>
+  <div padding *ngIf="!voted">
     <h1 class="header">Who will win the world cup?</h1>
     <p class="sub-header">* Place vote to see results</p>
   </div>
   <div class="vote-area" *ngIf="!voted">
     <div class="options">
-      <ion-button ion-button full class="option" color="light" [ngClass]="{active: selectedOption === option}"
-        *ngFor="let option of optionsArray" (click)="selectOption(option)">{{options[option].name}}</ion-button>
+
+      <ion-list>
+        <ion-radio-group [allowEmptySelection]="true" value="turtles">
+          <ion-item *ngFor="let option of optionsArray" (click)="selectOption(option)">
+            <ion-label>{{option}}</ion-label>
+
+            <ion-radio slot="end" [value]="option"></ion-radio>
+          </ion-item>
+        </ion-radio-group>
+      </ion-list>
+
+      <!-- <ion-button full class="option active" color="light" [ngClass]="{active: selectedOption === option}"
+        *ngFor="let option of optionsArray" (click)="selectOption(option)">{{options[option].name}}</ion-button> -->
     </div>
     <div>
-      <button ion-button block class="submit" (click)="vote()">Submit Vote!</button>
+      <ion-button class="submit" (click)="vote()">Submit Vote!</ion-button>
     </div>
   </div>
   <div *ngIf="voted">
     <!-- app-chart -->
-    <app-chart></app-chart>
+    <app-chart [mockData]="mockData"></app-chart>
 
     <div ion-button block class="response">Thank you for voting!</div>
   </div>

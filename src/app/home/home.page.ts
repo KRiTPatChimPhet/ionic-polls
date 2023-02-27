@@ -1,10 +1,9 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
 import { PusherProvider } from 'src/providers/pusher/pusher';
+import { DataRes, VoteOption } from '../core/model/data-res.model';
 
-export interface VoteOption {
-  [key: string]: { name: string, votes: number };
-}
+
 @Component({
   selector: 'app-home',
   templateUrl: 'home.page.html',
@@ -13,12 +12,14 @@ export interface VoteOption {
 
 export class HomePage {
 
-  options:VoteOption = {
+  options: VoteOption = {
     germany: { name: 'Germany', votes: 0 },
     spain: { name: 'Spain', votes: 0 },
     france: { name: 'France', votes: 0 },
     nigeria: { name: 'Nigeria', votes: 0 },
   };
+  mockData?: VoteOption;
+
   optionsArray = Object.keys(this.options);
   chartData = this.optionsArray.map((val ) => this.options[val].votes);
   selectedOption = '';
@@ -55,8 +56,10 @@ export class HomePage {
   vote() {
     if (this.selectedOption) {
       this.http
-        .post('http://localhost:4000/vote', { option: this.selectedOption })
+        .post<DataRes>( 'http://localhost:4000/vote',
+          { option: this.selectedOption } )
         .subscribe((res) => {
+          this.mockData = res.data;
           this.voted = true;
         });
     }

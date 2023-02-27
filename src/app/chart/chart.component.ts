@@ -1,5 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import Chart from 'chart.js/auto';
+import { VoteOption } from '../core/model/data-res.model';
 
 @Component({
   selector: 'app-chart',
@@ -7,7 +8,7 @@ import Chart from 'chart.js/auto';
   styleUrls: ['./chart.component.scss'],
 })
 export class ChartComponent implements AfterViewInit, OnInit {
-
+  @Input('mockData') mockData?: VoteOption;
   @ViewChild('chartCanvas') chartCanvas?: ElementRef;
 
   data: any = [];
@@ -21,58 +22,50 @@ export class ChartComponent implements AfterViewInit, OnInit {
   }
 
   async ngAfterViewInit() {
+    if (this.mockData) {
+      let stocks = await this.mockData;
 
-    let stocks = await fetch("assets/data/stocks.json").then(resp => resp.json());
-    stocks = stocks[0];
+      let votes: number[] = [];
 
-    let opens: number[] = [];
-    let closes: number[] = [];
-    let highs: number[] = [];
-    let lows: number[] = [];
-    let volumes = [];
+      let labels: string[] = [];
 
-    let labels: string[] = [];
 
-    Object.keys(stocks).forEach((key, index, array) => {
-      if (index > 2) {
-        return true;
+      const backgroundColor = [
+        'rgba(255, 199, 132, 0.2)',
+        'rgba(55, 99, 132, 0.4)',
+        'rgba(155, 99, 132, 0.4)',
+        'rgba(55, 99, 232, 0.4)',
+      ];
+      const borderColor = [
+        'rgba(255, 99, 32, 0.8)',
+        'rgba(55, 99, 132, 0.8)',
+        'rgba(155, 99, 132, 0.8)',
+        'rgba(55, 99, 132, 0.8)',
+      ];
+
+      Object.keys(stocks).forEach((key, index, array) => {
+        if (index > 3) {
+          return true;
+        }
+        labels.push(key);
+        votes.push(stocks[key].votes);
+        backgroundColor.push(backgroundColor[index]);
+        borderColor.push(borderColor[index])
+        return false;
+      });
+
+      this.data = {
+        labels: labels,
+        datasets: [{
+          label: 'Germany',
+          data: votes,
+          backgroundColor: backgroundColor,
+          borderColor: borderColor,
+          borderWidth: 2
+        }]
       }
-      labels.push(key);
-      opens.push(this.addRandom(stocks[key].open));
-      closes.push(this.addRandom(stocks[key].close));
-      highs.push(this.addRandom(stocks[key].high));
-      lows.push(this.addRandom(stocks[key].low));
-      volumes.push(stocks[key].volume);
-      return false;
-    });
-
-    this.data = {
-      labels: labels,
-      datasets: [{
-        label: 'Open',
-        data: opens,
-        backgroundColor: 'rgba(255, 199, 132, 0.2)',
-        borderColor: 'rgba(255, 99, 32, 0.8)',
-        borderWidth: 2
-      }, {
-        label: 'High',
-        data: highs,
-        backgroundColor: 'rgba(55, 99, 132, 0.4)',
-        borderColor: 'rgba(55, 99, 132, 0.8)',
-        borderWidth: 2
-      }, {
-        label: 'Low',
-        data: lows,
-        backgroundColor: 'rgba(155, 99, 132, 0.4)',
-        borderColor: 'rgba(155, 99, 132, 0.8)',
-        borderWidth: 2
-      }, {
-        label: 'Close',
-        data: closes,
-        backgroundColor: 'rgba(55, 99, 232, 0.4)',
-        borderColor: 'rgba(55, 99, 132, 0.8)',
-        borderWidth: 2
-      }]
+      console.log('backgroundColor',backgroundColor)
+      console.log('borderColor',borderColor)
     };
 
     this.changeChart({
