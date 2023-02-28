@@ -1,6 +1,9 @@
+import { HttpClient } from '@angular/common/http';
 import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
+import { AlertController, NavController } from '@ionic/angular';
 import Chart from 'chart.js/auto';
-import { VoteOption } from '../core/model/data-res.model';
+import { VoteOption } from '../../../core/model/data-res.model';
+import { PusherService } from '../../pusher/pusher.service';
 
 @Component({
   selector: 'app-chart',
@@ -14,21 +17,34 @@ export class ChartComponent implements AfterViewInit, OnInit {
   data: any = [];
   canvasChart?: Chart;
 
+
+  vote_channel: any;
+
   constructor(
-  ) { }
-
-  ngOnInit() {
-
+    private pusher: PusherService,
+    public navCtrl: NavController,
+    public alertCtrl: AlertController
+  ) {
   }
 
-  async ngAfterViewInit() {
-    if (this.mockData) {
-      let stocks = await this.mockData;
+  ngOnInit() {
+    let self = this;
+    this.vote_channel = this.pusher.init();
+    this.vote_channel.bind('new-entry', function (body: any) {
+      self.mockData = body.data;
+      self.editChart();
+    });
+  }
 
+  ngAfterViewInit() {
+    this.editChart();
+  }
+
+  editChart() {
+    if (this.mockData) {
       let votes: number[] = [];
 
       let labels: string[] = [];
-
 
       const backgroundColor = [
         'rgba(255, 199, 132, 0.2)',
@@ -43,40 +59,38 @@ export class ChartComponent implements AfterViewInit, OnInit {
         'rgba(55, 99, 132, 0.8)',
       ];
 
-      Object.keys(stocks).forEach((key, index, array) => {
+      Object.keys(this.mockData).forEach((key, index, array) => {
         if (index > 3) {
           return true;
         }
         labels.push(key);
-        votes.push(stocks[key].votes);
-        backgroundColor.push(backgroundColor[index]);
-        borderColor.push(borderColor[index])
+        if (this.mockData) {
+          votes.push(this.mockData[key].votes);
+        }
         return false;
       });
 
       this.data = {
         labels: labels,
+        backgroundColor,
         datasets: [{
-          label: 'Germany',
           data: votes,
           backgroundColor: backgroundColor,
           borderColor: borderColor,
           borderWidth: 2
         }]
       }
-      console.log('backgroundColor',backgroundColor)
-      console.log('borderColor',borderColor)
     };
 
     this.changeChart({
       detail: {
-        value: 'bar'
+        value: 'doughnut'
       }
     });
   }
 
   changeChart(event: any) {
-    const type = event.detail.value || 'bar';
+    const type = event.detail.value || 'doughnut';
     if (this.canvasChart) {
       this.canvasChart.destroy();
     }

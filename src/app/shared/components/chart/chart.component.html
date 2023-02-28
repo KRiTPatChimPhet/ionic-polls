@@ -1,0 +1,36 @@
+<!-- Select Chart type -->
+<ion-list class="cus-card">
+  <ion-list-header>
+    <ion-label>
+      Select Chart type
+      <div *ngIf="mockData">
+        <h6>
+          {{
+            mockData['germany'].votes+', '+
+            mockData['spain'].votes+', '+
+            mockData['france'].votes+', '+
+            mockData['nigeria'].votes
+          }}
+        </h6>
+      </div>
+    </ion-label>
+  </ion-list-header>
+
+  <ion-item class="ion-padding-horizontal">
+    <ion-label> Charts </ion-label>
+    <ion-select value="doughnut" okText="Create" cancelText="Cancel" mode="ios" (ionChange)="changeChart($event)"
+      color="danger">
+      <ion-select-option value="bar">Bar</ion-select-option>
+      <ion-select-option value="line">Lines</ion-select-option>
+      <ion-select-option value="radar">Radar</ion-select-option>
+      <ion-select-option value="doughnut">Doughnut</ion-select-option>
+      <ion-select-option value="pie">Pie</ion-select-option>
+    </ion-select>
+  </ion-item>
+
+</ion-list>
+<!-- Chart -->
+<div class="bg-white cus-card">
+  <canvas #chartCanvas></canvas>
+</div>
+<ion-button color="primary" (click)="editChart()"></ion-button>

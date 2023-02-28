@@ -1,7 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Component } from '@angular/core';
-import { PusherProvider } from 'src/providers/pusher/pusher';
-import { DataRes, VoteOption } from '../core/model/data-res.model';
+import { DataRes, VoteOption } from '../../core/model/data-res.model';
 
 
 @Component({
@@ -20,6 +19,7 @@ export class HomePage {
   };
   mockData?: VoteOption;
 
+  vote_channel: any;
   optionsArray = Object.keys(this.options);
   chartData = this.optionsArray.map((val ) => this.options[val].votes);
   selectedOption = '';
@@ -28,29 +28,14 @@ export class HomePage {
 
   constructor(
     private http: HttpClient,
-    private pusher: PusherProvider
-  ) {}
+  ) {
+  }
 
   ngOnInit() {
-    const channel = this.pusher.init();
-    channel.bind('new-entry', (data: { option: any; }) => {
-      this.computeData(data.option);
-    });
   }
 
   selectOption(option: string) {
     this.selectedOption = this.selectedOption !== option ? option : '';
-  }
-
-  computeData(option: string | number) {
-    this.options = {
-      ...this.options,
-      [option]: {
-        ...this.options[option],
-        votes: ++this.options[option].votes,
-      },
-    };
-    this.chartData = this.optionsArray.map((val) => this.options[val].votes);
   }
 
   vote() {

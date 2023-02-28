@@ -6,24 +6,22 @@ import { HomePage } from './home.page';
 import { HttpClient, HttpClientModule } from '@angular/common/http';
 
 import { HomePageRoutingModule } from './home-routing.module';
-import { PusherProvider } from 'src/providers/pusher/pusher';
-import { ChartComponent } from '../chart/chart.component';
-
-
+import { PusherService } from 'src/app/shared/pusher/pusher.service';
+import { SharedModule } from 'src/app/shared/shared.module';
 @NgModule({
   imports: [
     CommonModule,
     FormsModule,
     IonicModule,
     HttpClientModule,
-    HomePageRoutingModule
+    HomePageRoutingModule,
+    SharedModule
   ],
   declarations: [
-    HomePage,
-    ChartComponent
+    HomePage
   ],
   providers: [
-    PusherProvider,
+    PusherService,
     HttpClient
   ]
 })
