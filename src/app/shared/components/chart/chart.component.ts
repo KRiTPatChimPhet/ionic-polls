@@ -29,7 +29,7 @@ export class ChartComponent implements AfterViewInit, OnInit {
 
   ngOnInit() {
     let self = this;
-    this.vote_channel = this.pusher.init();
+    this.vote_channel = this.pusher.vote();
     this.vote_channel.bind('new-entry', function (body: any) {
       self.mockData = body.data;
       self.editChart();

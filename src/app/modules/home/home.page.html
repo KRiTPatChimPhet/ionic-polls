@@ -1,23 +1,29 @@
 <ion-header>
   <ion-toolbar>
-    <ion-title>
-      Vote
+    <ion-title slot="start"> Vote </ion-title>
+    <ion-title slot="end">
+      <ion-icon name="person-outline"></ion-icon>
+      {{ get_users_online() }}
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content class="content">
-
   <div padding *ngIf="!voted">
+    <p class="sub-header">
+      Hi <i>@{{ current_user }}</i><i> {{ isOnline(current_user) }}</i>
+    </p>
     <h1 class="header">Who will win the world cup?</h1>
     <p class="sub-header">* Place vote to see results</p>
   </div>
   <div class="vote-area" *ngIf="!voted">
     <div class="options">
-
       <ion-list>
         <ion-radio-group [allowEmptySelection]="true" value="turtles">
-          <ion-item *ngFor="let option of optionsArray" (click)="selectOption(option)">
+          <ion-item
+            *ngFor="let option of optionsArray"
+            (click)="selectOption(option)"
+          >
             <ion-label>{{option}}</ion-label>
 
             <ion-radio slot="end" [value]="option"></ion-radio>
